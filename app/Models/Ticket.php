@@ -16,6 +16,11 @@ class Ticket extends Model
         'available_quantity',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function exhibition()
     {
         return $this->belongsTo(Exhibition::class);

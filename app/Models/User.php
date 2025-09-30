@@ -22,6 +22,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function orders()
     {
         return $this->hasMany(Order::class);
@@ -33,5 +38,13 @@ class User extends Authenticatable
         return $this->belongsToMany(Exhibition::class, 'exhibition_user')
                     ->withPivot('visited_at')
                     ->withTimestamps();
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 }

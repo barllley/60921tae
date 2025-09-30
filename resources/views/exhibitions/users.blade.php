@@ -39,7 +39,7 @@
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     @if($user->pivot->visited_at)
-                                        {{ $user->pivot->visited_at->format('d.m.Y H:i') }}
+                                        {{ \Carbon\Carbon::parse($user->pivot->visited_at)->format('d.m.Y H:i') }}
                                     @else
                                         <span class="text-muted">Не указана</span>
                                     @endif

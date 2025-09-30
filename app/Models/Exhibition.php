@@ -16,6 +16,13 @@ class Exhibition extends Model
         'end_date',
     ];
 
+     protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
@@ -29,4 +36,11 @@ class Exhibition extends Model
                     ->withTimestamps();
     }
 
+    protected function casts(): array
+    {
+        return [
+            'start_date' => 'datetime',
+            'end_date' => 'datetime',
+        ];
+    }
 }

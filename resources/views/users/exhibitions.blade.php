@@ -28,7 +28,7 @@
                                 @if($exhibition->pivot->visited_at)
                                     <p class="card-text">
                                         <small class="text-success">
-                                            Посещено: {{ $exhibition->pivot->visited_at->format('d.m.Y H:i') }}
+                                            Посещено: {{ \Carbon\Carbon::parse($exhibition->pivot->visited_at)->format('d.m.Y H:i') }}
                                         </small>
                                     </p>
                                 @endif
