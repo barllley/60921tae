@@ -6,7 +6,16 @@
 </head>
 <body>
     <div class="container mt-4">
-        <h1>Все билеты</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Все билеты</h1>
+            <a href="{{ route('tickets.create') }}" class="btn btn-success">Создать билет</a>
+        </div>
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
         @if($tickets->count() > 0)
             <div class="row">
@@ -32,9 +41,22 @@
                                 <p class="card-text">
                                     <strong>Доступно:</strong> {{ $ticket->available_quantity }} шт.
                                 </p>
-                                <a href="{{ route('tickets.show', $ticket->id) }}" class="btn btn-primary">
-                                    Подробнее
-                                </a>
+                                <div class="btn-group">
+                                    <a href="{{ route('tickets.show', $ticket->id) }}" class="btn btn-primary btn-sm">
+                                        Подробнее
+                                    </a>
+                                    <a href="{{ route('tickets.edit', $ticket->id) }}" class="btn btn-warning btn-sm">
+                                        Редактировать
+                                    </a>
+                                    <form action="{{ route('tickets.destroy', $ticket->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Вы уверены, что хотите удалить этот билет?')">
+                                            Удалить
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
