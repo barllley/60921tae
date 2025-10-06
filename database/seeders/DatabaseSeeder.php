@@ -6,74 +6,116 @@ use App\Models\User;
 use App\Models\Exhibition;
 use App\Models\Ticket;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
-{
-    // Создаем выставки
-    $exhibition1 = Exhibition::create([
-        'title' => 'Выставка современного искусства',
-        'description' => 'Уникальная коллекция современного искусства от российских и зарубежных художников.',
-        'start_date' => '2024-10-01 10:00:00',
-        'end_date' => '2024-12-01 20:00:00',
-    ]);
+    {
+        // Создаем выставки
+        $exhibition1 = Exhibition::create([
+            'title' => 'Выставка современного искусства',
+            'description' => 'Уникальная коллекция современного искусства от российских и зарубежных художников.',
+            'start_date' => '2024-10-01 10:00:00',
+            'end_date' => '2024-12-01 20:00:00',
+        ]);
 
-    $exhibition2 = Exhibition::create([
-        'title' => 'Исторические артефакты',
-        'description' => 'Экспонаты из разных эпох, рассказывающие об истории человечества.',
-        'start_date' => '2024-09-15 09:00:00',
-        'end_date' => '2024-11-30 18:00:00',
-    ]);
+        $exhibition2 = Exhibition::create([
+            'title' => 'Исторические артефакты',
+            'description' => 'Экспонаты из разных эпох, рассказывающие об истории человечества.',
+            'start_date' => '2024-09-15 09:00:00',
+            'end_date' => '2024-11-30 18:00:00',
+        ]);
 
-    // Создаем билеты для обеих выставок
-    Ticket::create([
-        'exhibition_id' => $exhibition1->id,
-        'type' => 'standard',
-        'price' => 500.00,
-        'available_quantity' => 100,
-    ]);
+        $exhibition3 = Exhibition::create([
+            'title' => 'Научные открытия',
+            'description' => 'Интерактивная выставка о последних научных достижениях.',
+            'start_date' => '2024-11-01 10:00:00',
+            'end_date' => '2025-01-15 19:00:00',
+        ]);
 
-    Ticket::create([
-        'exhibition_id' => $exhibition1->id,
-        'type' => 'vip',
-        'price' => 1500.00,
-        'available_quantity' => 20,
-    ]);
+        // Создаем пользователей
+        $user1 = User::create([
+            'name' => 'Иван Иванов',
+            'email' => 'ivan@example.com',
+            'password' => Hash::make('password'),
+        ]);
 
-    Ticket::create([
-        'exhibition_id' => $exhibition2->id,
-        'type' => 'standard',
-        'price' => 400.00,
-        'available_quantity' => 80,
-    ]);
+        $user2 = User::create([
+            'name' => 'Мария Петрова',
+            'email' => 'maria@example.com',
+            'password' => Hash::make('password'),
+        ]);
 
-    Ticket::create([
-        'exhibition_id' => $exhibition2->id,
-        'type' => 'child',
-        'price' => 200.00,
-        'available_quantity' => 50,
-    ]);
+        $user3 = User::create([
+            'name' => 'Алексей Сидоров',
+            'email' => 'alexey@example.com',
+            'password' => Hash::make('password'),
+        ]);
 
-    // Создаем пользователей
-    $user1 = User::create([
-        'name' => 'Иван Иванов',
-        'email' => 'ivan@example.com',
-        'password' => bcrypt('password'),
-    ]);
+        // СОЗДАЕМ АДМИНИСТРАТОРА - исправляем здесь!
+        $admin = User::create([
+            'name' => 'Администратор',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('admin123'),
+            'is_admin' => 1,
+        ]);
 
-    $user2 = User::create([
-        'name' => 'Мария Петрова',
-        'email' => 'maria@example.com',
-        'password' => bcrypt('password'),
-    ]);
+        // Создаем базовые билеты
+        Ticket::create([
+            'exhibition_id' => $exhibition1->id,
+            'type' => 'standard',
+            'price' => 500.00,
+            'available_quantity' => 100,
+        ]);
 
-    // Создаем отношения многие-ко-многим
-    $user1->exhibitions()->attach($exhibition1->id, ['visited_at' => now()]);
-    $user1->exhibitions()->attach($exhibition2->id, ['visited_at' => now()->subDays(5)]);
-    $user2->exhibitions()->attach($exhibition1->id, ['visited_at' => now()->subDays(2)]);
-}
+        Ticket::create([
+            'exhibition_id' => $exhibition1->id,
+            'type' => 'vip',
+            'price' => 1500.00,
+            'available_quantity' => 20,
+        ]);
+
+        Ticket::create([
+            'exhibition_id' => $exhibition2->id,
+            'type' => 'standard',
+            'price' => 400.00,
+            'available_quantity' => 80,
+        ]);
+
+        Ticket::create([
+            'exhibition_id' => $exhibition2->id,
+            'type' => 'child',
+            'price' => 200.00,
+            'available_quantity' => 50,
+        ]);
+
+        // Создаем дополнительные билеты для пагинации
+        $ticketTypes = ['standard', 'vip', 'child'];
+        $exhibitionIds = [$exhibition1->id, $exhibition2->id, $exhibition3->id];
+
+        for ($i = 1; $i <= 15; $i++) {
+            $exhibitionId = $exhibitionIds[array_rand($exhibitionIds)];
+            $type = $ticketTypes[array_rand($ticketTypes)];
+            $price = [300, 400, 500, 600, 800, 1000, 1200, 1500, 2000][array_rand([300, 400, 500, 600, 800, 1000, 1200, 1500, 2000])];
+
+            Ticket::create([
+                'exhibition_id' => $exhibitionId,
+                'type' => $type,
+                'price' => $price,
+                'available_quantity' => rand(10, 100),
+            ]);
+        }
+
+        // Создаем отношения многие-ко-многим
+        $user1->exhibitions()->attach($exhibition1->id, ['visited_at' => now()]);
+        $user1->exhibitions()->attach($exhibition2->id, ['visited_at' => now()->subDays(5)]);
+        $user1->exhibitions()->attach($exhibition3->id, ['visited_at' => now()->subDays(3)]);
+
+        $user2->exhibitions()->attach($exhibition1->id, ['visited_at' => now()->subDays(2)]);
+        $user2->exhibitions()->attach($exhibition3->id, ['visited_at' => now()->subDays(1)]);
+
+        $user3->exhibitions()->attach($exhibition2->id, ['visited_at' => now()->subDays(4)]);
+        $user3->exhibitions()->attach($exhibition3->id, ['visited_at' => now()]);
+    }
 }
