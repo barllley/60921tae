@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
@@ -7,11 +8,17 @@ use App\Models\TicketInstance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Gate;
 
 class CheckoutController extends Controller
 {
     public function show()
     {
+        // Проверяем авторизацию через Gate
+        if (!Gate::allows('access-checkout')) {
+            return redirect('/login')->with('error', 'Для оформления заказа необходимо авторизоваться.');
+        }
+
         $cart = Session::get('cart', []);
 
         if (empty($cart)) {
@@ -40,6 +47,11 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
+        // Проверяем авторизацию через Gate
+        if (!Gate::allows('access-checkout')) {
+            return redirect('/login')->with('error', 'Для оформления заказа необходимо авторизоваться.');
+        }
+
         $cart = Session::get('cart', []);
 
         if (empty($cart)) {
@@ -99,6 +111,11 @@ class CheckoutController extends Controller
 
     public function success(Order $order)
     {
+        // Проверяем, что заказ принадлежит текущему пользователю
+        if ($order->user_id !== Auth::id() && !Gate::allows('admin-access')) {
+            return redirect('/')->with('error', 'Доступ запрещен.');
+        }
+
         return view('checkout.success', compact('order'));
     }
 

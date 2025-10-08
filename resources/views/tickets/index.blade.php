@@ -6,60 +6,66 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="fas fa-ticket-alt"></i> Все билеты</h1>
 
-        @if(Auth::user() && Auth::user()->is_admin)
-            <a href="{{ route('tickets.create') }}" class="btn btn-success">
-                <i class="fas fa-plus"></i> Создать билет
-            </a>
-        @endif
+        @auth
+            @if(Auth::user()->is_admin)
+                <a href="{{ route('tickets.create') }}" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Создать билет
+                </a>
+            @endif
+        @endauth
     </div>
 
-    <!-- Флэш-сообщения -->
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i>
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <!-- Унифицированные флэш-сообщения -->
+    @if(session()->has('success') || session()->has('error') || session()->has('info'))
+        <div class="alert-container mb-4">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if(session('info'))
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {{ session('info') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
         </div>
     @endif
 
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    @if(session('info'))
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            <i class="fas fa-info-circle me-2"></i>
-            {{ session('info') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <!-- Поле выбора количества элементов -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <form method="GET" action="{{ route('tickets.index') }}" class="d-flex align-items-center">
-                <label for="per_page" class="form-label mb-0 me-2">Показывать по:</label>
-                <select name="per_page" id="per_page" class="form-select w-auto" onchange="this.form.submit()">
-                    <option value="5" {{ request('per_page', 5) == 5 ? 'selected' : '' }}>5</option>
-                    <option value="10" {{ request('per_page', 5) == 10 ? 'selected' : '' }}>10</option>
-                    <option value="15" {{ request('per_page', 5) == 15 ? 'selected' : '' }}>15</option>
-                    <option value="20" {{ request('per_page', 5) == 20 ? 'selected' : '' }}>20</option>
-                    <option value="25" {{ request('per_page', 5) == 25 ? 'selected' : '' }}>25</option>
-                </select>
+    <!-- Форма выбора количества элементов на странице -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ route('tickets.index') }}" class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="per_page" class="form-label">Элементов на странице:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="per_page" id="per_page" class="form-select" onchange="this.form.submit()">
+                        <option value="2" {{ request('per_page') == 2 ? 'selected' : '' }}>2</option>
+                        <option value="5" {{ request('per_page') == 5 || !request('per_page') ? 'selected' : '' }}>5</option>
+                        <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <span class="text-muted">Всего записей: {{ $tickets->total() }}</span>
+                </div>
                 <!-- Сохраняем другие GET-параметры -->
                 @foreach(request()->except('per_page', 'page') as $key => $value)
                     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                 @endforeach
             </form>
-        </div>
-        <div class="col-md-6 text-md-end">
-            <div class="text-muted">
-                Найдено билетов: <strong>{{ $tickets->total() }}</strong>
-            </div>
         </div>
     </div>
 
@@ -111,24 +117,26 @@
                         @endif
                     </div>
                     <div class="card-footer bg-transparent">
-                        <div class="btn-group w-100">
+                        <div class="btn-group w-100 mb-2">
                             <a href="{{ route('tickets.show', $ticket->id) }}" class="btn btn-primary btn-sm flex-fill">
                                 <i class="fas fa-eye me-1"></i> Подробнее
                             </a>
-                            @if(Auth::user() && Auth::user()->is_admin)
-                                <a href="{{ route('tickets.edit', $ticket->id) }}" class="btn btn-warning btn-sm flex-fill" title="Редактировать">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('tickets.destroy', $ticket->id) }}" method="POST" class="d-inline flex-fill">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm w-100"
-                                            onclick="return confirm('Вы уверены, что хотите удалить билет #{{ $ticket->id }}?')"
-                                            title="Удалить">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            @endif
+                            @auth
+                                @if(Auth::user()->is_admin)
+                                    <a href="{{ route('tickets.edit', $ticket->id) }}" class="btn btn-warning btn-sm flex-fill" title="Редактировать">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('tickets.destroy', $ticket->id) }}" method="POST" class="d-inline flex-fill">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm w-100"
+                                                onclick="return confirm('Вы уверены, что хотите удалить билет #{{ $ticket->id }}?')"
+                                                title="Удалить">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
+                            @endauth
                         </div>
 
                         <!-- Кнопка "В корзину" -->
@@ -151,39 +159,82 @@
             @endforeach
         </div>
 
-        <!-- Упрощенная пагинация -->
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="text-muted">
-                Показано с <strong>{{ $tickets->firstItem() }}</strong> по <strong>{{ $tickets->lastItem() }}</strong>
-                из <strong>{{ $tickets->total() }}</strong> записей
-            </div>
+        <!-- Элементы управления пагинацией -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <!-- Первая страница -->
+                <li class="page-item {{ $tickets->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $tickets->url(1) }}" aria-label="First">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
 
-            <!-- Стандартная пагинация Laravel -->
-            {{ $tickets->appends(request()->except('page'))->links() }}
+                <!-- Предыдущая страница -->
+                <li class="page-item {{ $tickets->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $tickets->previousPageUrl() }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <!-- Номера страниц -->
+                @foreach ($tickets->getUrlRange(1, $tickets->lastPage()) as $page => $url)
+                    <li class="page-item {{ $page == $tickets->currentPage() ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                    </li>
+                @endforeach
+
+                <!-- Следующая страница -->
+                <li class="page-item {{ $tickets->hasMorePages() ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ $tickets->nextPageUrl() }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+                <!-- Последняя страница -->
+                <li class="page-item {{ $tickets->currentPage() == $tickets->lastPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $tickets->url($tickets->lastPage()) }}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Информация о пагинации -->
+        <div class="text-center mt-3">
+            <p class="text-muted">
+                Показано с {{ $tickets->firstItem() }} по {{ $tickets->lastItem() }} из {{ $tickets->total() }} записей
+                (Страница {{ $tickets->currentPage() }} из {{ $tickets->lastPage() }})
+            </p>
         </div>
+
     @else
         <div class="alert alert-info text-center py-4">
             <i class="fas fa-info-circle fa-2x mb-3"></i>
             <h4>Билеты не найдены</h4>
             <p class="mb-0">На данный момент нет доступных билетов.</p>
-            @if(Auth::user() && Auth::user()->is_admin)
-                <a href="{{ route('tickets.create') }}" class="btn btn-success mt-3">
-                    <i class="fas fa-plus"></i> Создать первый билет
-                </a>
-            @endif
+            @auth
+                @if(Auth::user()->is_admin)
+                    <a href="{{ route('tickets.create') }}" class="btn btn-success mt-3">
+                        <i class="fas fa-plus"></i> Создать первый билет
+                    </a>
+                @endif
+            @endauth
         </div>
     @endif
 
-    <div class="mt-4">
+    <!-- Навигационные кнопки -->
+    <div class="mt-4 d-flex justify-content-between">
         <a href="{{ route('exhibitions.index') }}" class="btn btn-outline-primary">
             <i class="fas fa-palette"></i> Перейти к выставкам
         </a>
 
-        @if(Auth::user() && Auth::user()->is_admin)
-            <a href="{{ route('tickets.create') }}" class="btn btn-outline-success ms-2">
-                <i class="fas fa-plus"></i> Добавить билет
-            </a>
-        @endif
+        @auth
+            @if(Auth::user()->is_admin)
+                <a href="{{ route('tickets.create') }}" class="btn btn-outline-success">
+                    <i class="fas fa-plus"></i> Добавить билет
+                </a>
+            @endif
+        @endauth
     </div>
 
     <!-- Скрипт для автоматического скрытия alert через 5 секунд -->

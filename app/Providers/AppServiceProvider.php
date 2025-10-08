@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+            // Принудительно устанавливаем путь для сессий
+        config(['session.path' => '/']);
     }
 }

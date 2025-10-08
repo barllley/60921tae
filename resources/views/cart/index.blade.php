@@ -20,6 +20,19 @@
                 @endif
             </div>
 
+            <!-- Уведомление для неавторизованных пользователей -->
+            @if(!auth()->check() && count($tickets) > 0)
+                <div class="alert alert-warning mb-4">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle me-3 fa-lg"></i>
+                        <div>
+                            <h6 class="mb-1">Для оформления заказа необходимо авторизоваться</h6>
+                            <p class="mb-0">Вы можете добавить билеты в корзину, но для завершения покупки потребуется войти в систему.</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @if(count($tickets) > 0)
                 <div class="row">
                     <!-- Список билетов -->
@@ -127,10 +140,25 @@
                                 </div>
 
                                 <div class="d-grid">
-                                    <a href="{{ route('checkout.show') }}" class="btn btn-dark btn-lg py-3 fw-medium">
-                                        <i class="fas fa-lock me-2"></i>
-                                        Перейти к оформлению
-                                    </a>
+                                    @if(auth()->check())
+                                        <!-- Кнопка для авторизованных пользователей -->
+                                        <a href="{{ route('checkout.show') }}" class="btn btn-dark btn-lg py-3 fw-medium">
+                                            <i class="fas fa-lock me-2"></i>
+                                            Перейти к оформлению
+                                        </a>
+                                    @else
+                                        <!-- Кнопки для неавторизованных пользователей -->
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ route('login') }}" class="btn btn-warning btn-lg py-3 fw-medium">
+                                                <i class="fas fa-sign-in-alt me-2"></i>
+                                                Войти для оформления
+                                            </a>
+                                            <a href="{{ route('register') }}" class="btn btn-outline-dark btn-lg py-3 fw-medium">
+                                                <i class="fas fa-user-plus me-2"></i>
+                                                Зарегистрироваться
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <div class="text-center mt-3">

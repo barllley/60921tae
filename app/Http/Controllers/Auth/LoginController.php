@@ -1,10 +1,11 @@
 <?php
-// app/Http/Controllers/Auth/LoginController.php
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
@@ -13,42 +14,67 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        // Проверяем, не авторизован ли уже пользователь
-        if (Auth::check()) {
-            return redirect($this->redirectTo);
-        }
 
         return view('auth.login');
     }
 
-    public function login(Request $request)
-    {
-        // Проверяем, не авторизован ли уже пользователь
-        if (Auth::check()) {
-            return redirect($this->redirectTo);
-        }
 
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8',
+public function login(Request $request)
+{
+    Log::info('=== DATABASE SESSION LOGIN START ===', [
+        'email' => $request->email,
+        'session_driver' => config('session.driver')
+    ]);
+
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|min:8',
+    ]);
+
+    if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        Log::info('=== DATABASE AUTH SUCCESS ===', [
+            'user_id' => Auth::id(),
+            'session_id' => $request->session()->getId()
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
-            return redirect()->intended($this->redirectTo);
-        }
+        $request->session()->regenerate();
 
-        throw ValidationException::withMessages([
-            'email' => 'Неверные учетные данные.',
+        // Проверим запись в базе данных
+        $sessionRecord = DB::table('sessions')
+            ->where('id', $request->session()->getId())
+            ->first();
+
+        Log::info('=== SESSION DB RECORD ===', [
+            'session_exists' => !is_null($sessionRecord),
+            'session_user_id' => $sessionRecord->user_id ?? null
         ]);
+
+        return $this->authenticated($request, Auth::user());
     }
+
+    throw ValidationException::withMessages([
+        'email' => 'Неверные учетные данные.',
+    ]);
+}
 
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return redirect('/');
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->is_admin == 1) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->intended($this->redirectPath());
+    }
+
+    public function redirectPath()
+    {
+        return $this->redirectTo;
     }
 }

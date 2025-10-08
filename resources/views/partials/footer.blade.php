@@ -16,9 +16,6 @@
                     <a href="#" class="text-light me-3">
                         <i class="fab fa-instagram fa-lg"></i>
                     </a>
-                    <a href="#" class="text-light me-3">
-                        <i class="fab fa-facebook fa-lg"></i>
-                    </a>
                     <a href="#" class="text-light">
                         <i class="fab fa-telegram fa-lg"></i>
                     </a>
