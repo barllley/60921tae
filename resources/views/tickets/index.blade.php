@@ -15,34 +15,6 @@
         @endauth
     </div>
 
-    <!-- Унифицированные флэш-сообщения -->
-    @if(session()->has('success') || session()->has('error') || session()->has('info'))
-        <div class="alert-container mb-4">
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if(session('info'))
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    <i class="fas fa-info-circle me-2"></i>
-                    {{ session('info') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-        </div>
-    @endif
 
     <!-- Форма выбора количества элементов на странице -->
     <div class="card mb-4">
@@ -227,14 +199,6 @@
         <a href="{{ route('exhibitions.index') }}" class="btn btn-outline-primary">
             <i class="fas fa-palette"></i> Перейти к выставкам
         </a>
-
-        @auth
-            @if(Auth::user()->is_admin)
-                <a href="{{ route('tickets.create') }}" class="btn btn-outline-success">
-                    <i class="fas fa-plus"></i> Добавить билет
-                </a>
-            @endif
-        @endauth
     </div>
 
     <!-- Скрипт для автоматического скрытия alert через 5 секунд -->

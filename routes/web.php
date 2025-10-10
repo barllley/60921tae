@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Маршруты CRUD (только для авторизованных с правами через Gates)
 Route::middleware(['auth'])->group(function () {
-    // Билеты CRUD
+    // Билеты CRUDs
     Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
     Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
     Route::get('/tickets/{id}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
@@ -77,14 +77,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/exhibitions/{id}/edit', [ExhibitionController::class, 'edit'])->name('exhibitions.edit');
     Route::put('/exhibitions/{id}', [ExhibitionController::class, 'update'])->name('exhibitions.update');
     Route::delete('/exhibitions/{id}', [ExhibitionController::class, 'destroy'])->name('exhibitions.destroy');
-});
 
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('users');
+});
+/*
 // Маршруты администратора (проверка прав через Gates в контроллерах)
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [AdminController::class, 'users'])->name('users');
 });
-
+*/
 
 // Добавьте в routes/web.php
 Route::get('/debug/auth', function() {

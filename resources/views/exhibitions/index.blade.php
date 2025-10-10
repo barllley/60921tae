@@ -6,6 +6,13 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="fas fa-palette"></i> Все выставки</h1>
     </div>
+    @auth
+        @if(Auth::user()->is_admin)
+            <a href="{{ route('exhibitions.create') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Создать выставку
+            </a>
+        @endif
+    @endauth
 
     <!-- Форма выбора количества элементов на странице -->
     <div class="card mb-4">
@@ -52,6 +59,13 @@
                                     <i class="fas fa-eye"></i> Подробнее
                                 </a>
                             </div>
+                            @auth
+                                @if(Auth::user()->is_admin)
+                                    <a href="{{ route('exhibitions.edit', $exhibition->id) }}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i> Редактировать
+                                    </a>
+                                @endif
+                            @endauth
                         </div>
                     </div>
                 </div>
