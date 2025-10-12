@@ -10,7 +10,7 @@
 </head>
 <body>
 
-        <!-- Временный блок отладки авторизации -->
+        <!-- блок отладки
     <div style="position: fixed; top: 10px; right: 10px; background: #333; color: white; padding: 10px; z-index: 9999; border-radius: 5px; font-size: 12px;">
         <strong>Отладка Auth:</strong><br>
         Auth::check(): {{ Auth::check() ? 'TRUE' : 'FALSE' }}<br>
@@ -20,20 +20,14 @@
         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
-    </div>
+    </div> -->
 
-    <!-- Навигационное меню -->
-    @include('partials.navbar')
-
-    <!-- Блок для вывода сообщений -->
     @include('partials.messages')
 
-    <!-- Основное содержимое -->
     <main class="container mt-4">
         @yield('content')
     </main>
 
-    <!-- Подвал -->
     @include('partials.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -3,45 +3,23 @@
 @section('title', 'Satura - Галерея современного искусства')
 
 @section('content')
-    <!-- Герой-секция -->
-    <section class="hero-section bg-dark text-white py-5 mb-5">
+    <!-- мэин -->
+    <section class="hero-section bg-white text-dark py-5 mb-5">
         <div class="container">
             <div class="row align-items-center min-vh-50">
                 <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold mb-3">
-                        Satura
-                    </h1>
-                    <p class="h3 text-warning mb-4">
-                        Искусство, которое говорит с тобой
-                    </p>
+                    <h1 class="display-4 fw-bold mb-3">SATURA</h1>
                     <p class="lead mb-4">
                         Галерея современного искусства, где каждая выставка - это диалог
                         между художником и зрителем. Откройте для себя смелые идеи,
                         инновационные техники и актуальные темы через призму современного творчества.
                     </p>
-                    <div class="d-flex flex-wrap gap-3">
-                        <a href="{{ route('exhibitions.index') }}" class="btn btn-primary btn-lg">
-                            <i class="fas fa-palette me-2"></i>Текущие выставки
-                        </a>
-                        <a href="{{ route('tickets.index') }}" class="btn btn-outline-light btn-lg">
-                            <i class="fas fa-ticket-alt me-2"></i>Приобрести билеты
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-6 text-center">
-                    <div class="hero-image">
-                        <i class="fas fa-brush display-1 text-warning mb-3"></i>
-                        <div class="text-light">
-                            <h5>Более {{ $allExhibitionsCount }} выставок</h5>
-                            <p class="mb-0">Современных художников</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Секция "Посетите на этой неделе" -->
+    <!-- на этой неделе -->
     <section class="weekly-exhibitions mb-5">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -90,16 +68,10 @@
                                 </div>
                             </div>
                             <div class="card-footer bg-transparent">
-                                <div class="d-grid gap-2">
-                                    <a href="{{ route('exhibitions.show', $exhibition->id) }}"
-                                       class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-eye me-1"></i> Подробнее
-                                    </a>
-                                    <a href="{{ route('tickets.index') }}?exhibition={{ $exhibition->id }}"
-                                       class="btn btn-primary btn-sm">
-                                        <i class="fas fa-ticket-alt me-1"></i> Забронировать
-                                    </a>
-                                </div>
+                                <a href="{{ route('exhibitions.show', $exhibition->id) }}"
+                                    class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i> Подробнее
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -118,7 +90,7 @@
         </div>
     </section>
 
-    <!-- Секция о галерее -->
+    <!-- о галерее -->
     <section class="about-section bg-light py-5">
         <div class="container">
             <div class="row align-items-center">
@@ -151,7 +123,7 @@
         </div>
     </section>
 
-    <!-- Секция преимуществ -->
+    <!-- преимущества -->
     <section class="features-section py-5">
         <div class="container">
             <div class="row text-center mb-5">

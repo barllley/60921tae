@@ -66,12 +66,9 @@ public function login(Request $request)
     }
 
     protected function authenticated(Request $request, $user)
-    {
-        if ($user->is_admin == 1) {
-            return redirect()->route('admin.dashboard');
-        }
-        return redirect()->intended($this->redirectPath());
-    }
+{
+    return redirect()->intended($this->redirectPath());
+}
 
     public function redirectPath()
     {

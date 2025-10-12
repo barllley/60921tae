@@ -30,6 +30,17 @@
                         Билеты
                     </a>
                 </li>
+
+                <!-- Пункт для администратора - Управление пользователями -->
+                @auth
+                    @if(Auth::user()->is_admin)
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-dark fw-medium position-relative py-3" href="{{ route('admin.users') }}">
+                                Пользователи
+                            </a>
+                        </li>
+                    @endif
+                @endauth
             </ul>
 
             <!-- Правая часть - авторизация -->
@@ -38,7 +49,7 @@
                     $cartCount = count(Session::get('cart', []));
                 @endphp
 
-                <!-- В правой части навигации, перед кнопкой Войти -->
+                <!-- Корзина -->
                 <li class="nav-item me-3">
                     <a class="nav-link text-dark fw-medium position-relative py-3" href="{{ route('cart.index') }}">
                         <i class="fas fa-shopping-cart me-1"></i>
@@ -50,6 +61,7 @@
                         @endif
                     </a>
                 </li>
+
                 @auth
                     <!-- Для авторизованных пользователей -->
                     <li class="nav-item dropdown">
@@ -59,27 +71,7 @@
                             <i class="fas fa-chevron-down small"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2" aria-labelledby="userDropdown">
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center py-2" href="#">
-                                    <i class="fas fa-user me-3 text-muted"></i>
-                                    Профиль
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item d-flex align-items-center py-2" href="#">
-                                    <i class="fas fa-history me-3 text-muted"></i>
-                                    История
-                                </a>
-                            </li>
-                            @if(Auth::user()->is_admin)
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2" href="#">
-                                        <i class="fas fa-cog me-3 text-muted"></i>
-                                        Панель управления
-                                    </a>
-                                </li>
-                            @endif
-                            <li><hr class="dropdown-divider my-2"></li>
+                            <!-- Убраны Профиль и История -->
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf

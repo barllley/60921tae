@@ -16,7 +16,7 @@
     </div>
 
 
-    <!-- Форма выбора количества элементов на странице -->
+    <!-- выбор количества элементов на странице -->
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" action="{{ route('tickets.index') }}" class="row g-3 align-items-center">
@@ -33,7 +33,7 @@
                 <div class="col-auto">
                     <span class="text-muted">Всего записей: {{ $tickets->total() }}</span>
                 </div>
-                <!-- Сохраняем другие GET-параметры -->
+
                 @foreach(request()->except('per_page', 'page') as $key => $value)
                     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                 @endforeach
@@ -111,7 +111,6 @@
                             @endauth
                         </div>
 
-                        <!-- Кнопка "В корзину" -->
                         @if($ticket->available_quantity > 0)
                             <form action="{{ route('cart.add', $ticket->id) }}" method="POST" class="w-100">
                                 @csrf
@@ -131,38 +130,34 @@
             @endforeach
         </div>
 
-        <!-- Элементы управления пагинацией -->
+        <!-- пагинация -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <!-- Первая страница -->
+
                 <li class="page-item {{ $tickets->onFirstPage() ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $tickets->url(1) }}" aria-label="First">
                         <span aria-hidden="true">&laquo;&laquo;</span>
                     </a>
                 </li>
 
-                <!-- Предыдущая страница -->
                 <li class="page-item {{ $tickets->onFirstPage() ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $tickets->previousPageUrl() }}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
-                <!-- Номера страниц -->
                 @foreach ($tickets->getUrlRange(1, $tickets->lastPage()) as $page => $url)
                     <li class="page-item {{ $page == $tickets->currentPage() ? 'active' : '' }}">
                         <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                     </li>
                 @endforeach
 
-                <!-- Следующая страница -->
                 <li class="page-item {{ $tickets->hasMorePages() ? '' : 'disabled' }}">
                     <a class="page-link" href="{{ $tickets->nextPageUrl() }}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
 
-                <!-- Последняя страница -->
                 <li class="page-item {{ $tickets->currentPage() == $tickets->lastPage() ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $tickets->url($tickets->lastPage()) }}" aria-label="Last">
                         <span aria-hidden="true">&raquo;&raquo;</span>
@@ -171,7 +166,6 @@
             </ul>
         </nav>
 
-        <!-- Информация о пагинации -->
         <div class="text-center mt-3">
             <p class="text-muted">
                 Показано с {{ $tickets->firstItem() }} по {{ $tickets->lastItem() }} из {{ $tickets->total() }} записей
@@ -194,17 +188,17 @@
         </div>
     @endif
 
-    <!-- Навигационные кнопки -->
+
     <div class="mt-4 d-flex justify-content-between">
         <a href="{{ route('exhibitions.index') }}" class="btn btn-outline-primary">
             <i class="fas fa-palette"></i> Перейти к выставкам
         </a>
     </div>
 
-    <!-- Скрипт для автоматического скрытия alert через 5 секунд -->
+    <!-- cкрипт для автоматического скрытия -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Автоматическое скрытие alert через 5 секунд
+
             setTimeout(function() {
                 const alerts = document.querySelectorAll('.alert');
                 alerts.forEach(function(alert) {

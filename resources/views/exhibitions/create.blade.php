@@ -118,7 +118,7 @@
                            placeholder="Введите адрес или название места">
                     @error('location')
                         <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror>
+                    @enderror
                     <div class="form-text">Укажите, где будет проходить выставка</div>
                 </div>
 
@@ -137,24 +137,6 @@
         </div>
     </div>
 
-    <div class="card mt-4">
-        <div class="card-header bg-light">
-            <h6 class="mb-0"><i class="fas fa-info-circle"></i> Подсказки по заполнению</h6>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h6><i class="fas fa-lightbulb text-warning"></i> Название выставки</h6>
-                    <p class="small text-muted">Используйте яркое, запоминающееся название, которое отражает суть выставки.</p>
-                </div>
-                <div class="col-md-6">
-                    <h6><i class="fas fa-lightbulb text-warning"></i> Даты проведения</h6>
-                    <p class="small text-muted">Убедитесь, что дата окончания позже даты начала. Рекомендуемая продолжительность: 2-4 недели.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @push('scripts')
     <script>
         // Валидация дат
@@ -162,16 +144,15 @@
             const startDate = document.getElementById('start_date');
             const endDate = document.getElementById('end_date');
 
-            // Установка минимальной даты (сегодня) для начала
+
             const today = new Date().toISOString().split('T')[0];
             startDate.min = today;
 
-            // Обновление минимальной даты для окончания при изменении даты начала
             startDate.addEventListener('change', function() {
                 endDate.min = this.value;
             });
 
-            // Валидация формы
+
             document.querySelector('form').addEventListener('submit', function(e) {
                 if (startDate.value && endDate.value) {
                     if (new Date(endDate.value) <= new Date(startDate.value)) {

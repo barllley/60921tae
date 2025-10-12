@@ -12,7 +12,6 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -28,6 +27,25 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 });
 
+// Маршруты администратора
+Route::middleware(['auth'])->group(function () {
+    // Управление пользователями
+    Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+
+    // Билеты CRUD
+    Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
+    Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
+    Route::get('/tickets/{id}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
+    Route::put('/tickets/{id}', [TicketController::class, 'update'])->name('tickets.update');
+    Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+
+    // Выставки CRUD
+    Route::get('/exhibitions/create', [ExhibitionController::class, 'create'])->name('exhibitions.create');
+    Route::post('/exhibitions', [ExhibitionController::class, 'store'])->name('exhibitions.store');
+    Route::get('/exhibitions/{id}/edit', [ExhibitionController::class, 'edit'])->name('exhibitions.edit');
+    Route::put('/exhibitions/{id}', [ExhibitionController::class, 'update'])->name('exhibitions.update');
+    Route::delete('/exhibitions/{id}', [ExhibitionController::class, 'destroy'])->name('exhibitions.destroy');
+});
 
 // Маршрут для ошибок
 Route::get('/error', function () {
@@ -56,49 +74,22 @@ Route::middleware(['auth'])->group(function () {
     // Выход из системы
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-
     // Маршруты для отношений многие-ко-многим
     Route::get('/users/{id}/exhibitions', [UserExhibitionController::class, 'show'])->name('users.exhibitions');
     Route::get('/exhibitions/{id}/users', [ExhibitionUserController::class, 'show'])->name('exhibitions.users');
 });
 
-// Маршруты CRUD (только для авторизованных с правами через Gates)
-Route::middleware(['auth'])->group(function () {
-    // Билеты CRUDs
-    Route::get('/tickets/create', [TicketController::class, 'create'])->name('tickets.create');
-    Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
-    Route::get('/tickets/{id}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
-    Route::put('/tickets/{id}', [TicketController::class, 'update'])->name('tickets.update');
-    Route::delete('/tickets/{id}', [TicketController::class, 'destroy'])->name('tickets.destroy');
 
-    // Выставки CRUD
-    Route::get('/exhibitions/create', [ExhibitionController::class, 'create'])->name('exhibitions.create');
-    Route::post('/exhibitions', [ExhibitionController::class, 'store'])->name('exhibitions.store');
-    Route::get('/exhibitions/{id}/edit', [ExhibitionController::class, 'edit'])->name('exhibitions.edit');
-    Route::put('/exhibitions/{id}', [ExhibitionController::class, 'update'])->name('exhibitions.update');
-    Route::delete('/exhibitions/{id}', [ExhibitionController::class, 'destroy'])->name('exhibitions.destroy');
-
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/admin/users', [AdminController::class, 'users'])->name('users');
-});
-/*
-// Маршруты администратора (проверка прав через Gates в контроллерах)
-Route::prefix('admin')->name('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    Route::get('/users', [AdminController::class, 'users'])->name('users');
-});
-*/
-
-// Добавьте в routes/web.php
+// Отладочные маршруты
 Route::get('/debug/auth', function() {
-return [
-'is_authenticated' => Auth::check(),
-'user_id' => Auth::id(),
-'user' => Auth::user(),
-'session_id' => Session::getId(),
-'session_data' => Session::all(),
-'csrf_token' => csrf_token(),
-];
+    return [
+        'is_authenticated' => Auth::check(),
+        'user_id' => Auth::id(),
+        'user' => Auth::user(),
+        'session_id' => Session::getId(),
+        'session_data' => Session::all(),
+        'csrf_token' => csrf_token(),
+    ];
 });
 
 Route::get('/debug/db-sessions', function() {
