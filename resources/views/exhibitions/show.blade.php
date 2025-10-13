@@ -6,7 +6,6 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="fas fa-palette"></i> {{ $exhibition->title }}</h1>
 
-        <!-- Кнопка создания билета только для админа -->
         @if(Auth::user() and Auth::user()->is_admin)
             <a href="{{ route('tickets.create') }}" class="btn btn-success">
                 <i class="fas fa-plus"></i> Добавить билет
@@ -20,11 +19,11 @@
             <p class="card-text"><strong>Описание:</strong> {{ $exhibition->description }}</p>
             <p class="card-text">
                 <strong><i class="fas fa-calendar-day"></i> Дата начала:</strong>
-                {{ $exhibition->start_date->format('d.m.Y H:i') }}
+                {{ $exhibition->start_date->format('d.m.Y') }}
             </p>
             <p class="card-text">
                 <strong><i class="fas fa-calendar-times"></i> Дата окончания:</strong>
-                {{ $exhibition->end_date->format('d.m.Y H:i') }}
+                {{ $exhibition->end_date->format('d.m.Y') }}
             </p>
         </div>
     </div>
@@ -57,7 +56,6 @@
                                     <i class="fas fa-eye"></i> Подробнее
                                 </a>
 
-                                <!-- Кнопки редактирования и удаления только для админа -->
                                 @if(Auth::user() and Auth::user()->is_admin)
                                     <a href="{{ route('tickets.edit', $ticket->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Редактировать
@@ -88,7 +86,6 @@
             <i class="fas fa-arrow-left"></i> Назад к списку выставок
         </a>
 
-        <!-- Дополнительные кнопки для админа -->
         @if(Auth::user() and Auth::user()->is_admin)
             <a href="{{ route('tickets.create') }}" class="btn btn-success">
                 <i class="fas fa-plus-circle"></i> Создать новый билет

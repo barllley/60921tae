@@ -39,7 +39,6 @@ public function login(Request $request)
 
         $request->session()->regenerate();
 
-        // Проверим запись в базе данных
         $sessionRecord = DB::table('sessions')
             ->where('id', $request->session()->getId())
             ->first();

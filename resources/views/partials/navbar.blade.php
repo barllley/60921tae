@@ -1,18 +1,14 @@
-{{-- resources/views/partials/navbar.blade.php --}}
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top border-bottom">
     <div class="container">
-        <!-- Логотип -->
         <a class="navbar-brand fw-bold fs-3 text-dark" href="{{ route('home') }}">
             SATURA
         </a>
 
-        <!-- Кнопка для мобильных -->
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Навигационные ссылки -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item mx-2">
@@ -31,7 +27,6 @@
                     </a>
                 </li>
 
-                <!-- Пункт для администратора - Управление пользователями -->
                 @auth
                     @if(Auth::user()->is_admin)
                         <li class="nav-item mx-2">
@@ -43,13 +38,11 @@
                 @endauth
             </ul>
 
-            <!-- Правая часть - авторизация -->
             <ul class="navbar-nav">
                 @php
                     $cartCount = count(Session::get('cart', []));
                 @endphp
 
-                <!-- Корзина -->
                 <li class="nav-item me-3">
                     <a class="nav-link text-dark fw-medium position-relative py-3" href="{{ route('cart.index') }}">
                         <i class="fas fa-shopping-cart me-1"></i>
@@ -63,15 +56,13 @@
                 </li>
 
                 @auth
-                    <!-- Для авторизованных пользователей -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-dark fw-medium d-flex align-items-center py-3" href="#"
                            id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="d-none d-md-inline me-2">{{ Auth::user()->name }}</span>
-                            <i class="fas fa-chevron-down small"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg mt-2" aria-labelledby="userDropdown">
-                            <!-- Убраны Профиль и История -->
+
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -84,7 +75,6 @@
                         </ul>
                     </li>
                 @else
-                    <!-- Для гостей - одна кнопка "Войти" -->
                     <li class="nav-item">
                         <a class="nav-link text-dark fw-medium py-3 px-0 px-lg-3" href="{{ route('login') }}">
                             Войти
@@ -96,7 +86,6 @@
     </div>
 </nav>
 
-<!-- Отступ для фиксированного хедера -->
 <div style="height: 76px;"></div>
 
 @push('styles')
@@ -169,13 +158,11 @@
     color: #1a1a1a !important;
 }
 
-/* Кнопка "Войти" */
 .navbar-nav .nav-link[href*="login"] {
     font-weight: 500;
     padding-right: 0 !important;
 }
 
-/* Мобильная версия */
 @media (max-width: 991.98px) {
     .navbar-collapse {
         background: white;
@@ -206,12 +193,10 @@
     }
 }
 
-/* Анимация появления */
 .navbar-collapse.collapsing {
     transition: height 0.3s ease;
 }
 
-/* Стили для скролла */
 .navbar-scrolled {
     background: rgba(255, 255, 255, 0.98) !important;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
@@ -221,7 +206,6 @@
 
 @push('scripts')
 <script>
-// Подсветка активной ссылки
 document.addEventListener('DOMContentLoaded', function() {
     const currentUrl = window.location.href;
     const navLinks = document.querySelectorAll('.nav-link');
@@ -234,7 +218,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Эффект при скролле
 window.addEventListener('scroll', function() {
     const navbar = document.querySelector('.navbar');
     if (window.scrollY > 50) {

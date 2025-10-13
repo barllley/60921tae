@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/Auth/RegisterController.php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -15,7 +15,6 @@ class RegisterController extends Controller
 
     public function showRegistrationForm()
     {
-        // Проверяем, не авторизован ли уже пользователь
         if (Auth::check()) {
             return redirect($this->redirectTo);
         }
@@ -25,7 +24,6 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        // Проверяем, не авторизован ли уже пользователь
         if (Auth::check()) {
             return redirect($this->redirectTo);
         }

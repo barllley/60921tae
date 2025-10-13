@@ -14,7 +14,6 @@ class CheckoutController extends Controller
 {
     public function show()
     {
-        // Проверяем авторизацию через Gate
         if (!Gate::allows('access-checkout')) {
             return redirect('/login')->with('error', 'Для оформления заказа необходимо авторизоваться.');
         }
@@ -47,7 +46,6 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
-        // Проверяем авторизацию через Gate
         if (!Gate::allows('access-checkout')) {
             return redirect('/login')->with('error', 'Для оформления заказа необходимо авторизоваться.');
         }
@@ -58,17 +56,15 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Корзина пуста.');
         }
 
-        // Валидация
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email',
             'customer_phone' => 'required|string|max:20',
         ]);
 
-        // Создаем заказ
         $order = Order::create([
             'user_id' => Auth::id(),
-            'total_amount' => 0, // Рассчитаем ниже
+            'total_amount' => 0,
             'status' => 'pending',
             'customer_name' => $validated['customer_name'],
             'customer_email' => $validated['customer_email'],
@@ -77,12 +73,10 @@ class CheckoutController extends Controller
 
         $totalAmount = 0;
 
-        // Обрабатываем каждый билет в корзине
         foreach ($cart as $ticketId => $item) {
             $ticket = Ticket::find($ticketId);
 
             if ($ticket && $ticket->available_quantity >= $item['quantity']) {
-                // Создаем экземпляры билетов
                 for ($i = 0; $i < $item['quantity']; $i++) {
                     TicketInstance::create([
                         'ticket_id' => $ticket->id,
@@ -92,17 +86,14 @@ class CheckoutController extends Controller
                     ]);
                 }
 
-                // Обновляем доступное количество
                 $ticket->decrement('available_quantity', $item['quantity']);
 
                 $totalAmount += $ticket->price * $item['quantity'];
             }
         }
 
-        // Обновляем общую сумму заказа
         $order->update(['total_amount' => $totalAmount]);
 
-        // Очищаем корзину
         Session::forget('cart');
 
         return redirect()->route('checkout.success', $order)
@@ -111,7 +102,6 @@ class CheckoutController extends Controller
 
     public function success(Order $order)
     {
-        // Проверяем, что заказ принадлежит текущему пользователю
         if ($order->user_id !== Auth::id() && !Gate::allows('admin-access')) {
             return redirect('/')->with('error', 'Доступ запрещен.');
         }

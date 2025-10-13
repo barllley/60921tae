@@ -38,7 +38,7 @@
 
                 <div class="mb-3">
                     <label for="title" class="form-label">
-                        <i class="fas fa-heading"></i> Название выставки *
+                        <i class="fas fa-heading"></i> Название выставки
                     </label>
                     <input type="text"
                            class="form-control @error('title') is-invalid @enderror"
@@ -55,7 +55,7 @@
 
                 <div class="mb-3">
                     <label for="description" class="form-label">
-                        <i class="fas fa-align-left"></i> Описание *
+                        <i class="fas fa-align-left"></i> Описание
                     </label>
                     <textarea class="form-control @error('description') is-invalid @enderror"
                               id="description"
@@ -73,7 +73,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="start_date" class="form-label">
-                                <i class="fas fa-calendar-plus"></i> Дата начала *
+                                <i class="fas fa-calendar-plus"></i> Дата начала
                             </label>
                             <input type="date"
                                    class="form-control @error('start_date') is-invalid @enderror"
@@ -90,7 +90,7 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="end_date" class="form-label">
-                                <i class="fas fa-calendar-check"></i> Дата окончания *
+                                <i class="fas fa-calendar-check"></i> Дата окончания
                             </label>
                             <input type="date"
                                    class="form-control @error('end_date') is-invalid @enderror"
@@ -107,7 +107,7 @@
 
                 <div class="mb-3">
                     <label for="location" class="form-label">
-                        <i class="fas fa-map-marker-alt"></i> Место проведения *
+                        <i class="fas fa-map-marker-alt"></i> Место проведения
                     </label>
                     <input type="text"
                            class="form-control @error('location') is-invalid @enderror"
@@ -139,7 +139,6 @@
 
     @push('scripts')
     <script>
-        // Валидация дат
         document.addEventListener('DOMContentLoaded', function() {
             const startDate = document.getElementById('start_date');
             const endDate = document.getElementById('end_date');

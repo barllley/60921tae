@@ -24,8 +24,6 @@ class ExhibitionController extends Controller
         return view('exhibitions.show', compact('exhibition'));
     }
 
-    // Добавьте эти методы для администратора:
-
     public function create()
     {
         if (!Gate::allows('manage-exhibitions')) {
@@ -96,7 +94,6 @@ class ExhibitionController extends Controller
                 'description' => 'required|string',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
-                'location' => 'required|string|max:255',
             ]);
 
             $exhibition->update($validated);

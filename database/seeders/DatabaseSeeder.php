@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Создаем выставки
+
         $exhibition1 = Exhibition::create([
             'title' => 'Выставка современного искусства',
             'description' => 'Уникальная коллекция современного искусства от российских и зарубежных художников.',
@@ -23,18 +23,17 @@ class DatabaseSeeder extends Seeder
         $exhibition2 = Exhibition::create([
             'title' => 'Исторические артефакты',
             'description' => 'Экспонаты из разных эпох, рассказывающие об истории человечества.',
-            'start_date' => '2024-09-15 09:00:00',
-            'end_date' => '2024-11-30 18:00:00',
+            'start_date' => '2024-09-15',
+            'end_date' => '2024-11-30',
         ]);
 
         $exhibition3 = Exhibition::create([
             'title' => 'Научные открытия',
             'description' => 'Интерактивная выставка о последних научных достижениях.',
-            'start_date' => '2024-11-01 10:00:00',
-            'end_date' => '2025-01-15 19:00:00',
+            'start_date' => '2024-11-01',
+            'end_date' => '2025-01-15',
         ]);
 
-        // Создаем пользователей
         $user1 = User::create([
             'name' => 'Иван Иванов',
             'email' => 'ivan@example.com',
@@ -53,7 +52,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        // СОЗДАЕМ АДМИНИСТРАТОРА - исправляем здесь!
+
         $admin = User::create([
             'name' => 'Администратор',
             'email' => 'admin@example.com',
@@ -61,7 +60,6 @@ class DatabaseSeeder extends Seeder
             'is_admin' => 1,
         ]);
 
-        // Создаем базовые билеты
         Ticket::create([
             'exhibition_id' => $exhibition1->id,
             'type' => 'standard',
@@ -90,7 +88,7 @@ class DatabaseSeeder extends Seeder
             'available_quantity' => 50,
         ]);
 
-        // Создаем дополнительные билеты для пагинации
+
         $ticketTypes = ['standard', 'vip', 'child'];
         $exhibitionIds = [$exhibition1->id, $exhibition2->id, $exhibition3->id];
 
@@ -107,7 +105,7 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Создаем отношения многие-ко-многим
+        // отношения многие-ко-многим
         $user1->exhibitions()->attach($exhibition1->id, ['visited_at' => now()]);
         $user1->exhibitions()->attach($exhibition2->id, ['visited_at' => now()->subDays(5)]);
         $user1->exhibitions()->attach($exhibition3->id, ['visited_at' => now()->subDays(3)]);

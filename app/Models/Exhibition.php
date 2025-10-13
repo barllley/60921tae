@@ -28,7 +28,7 @@ class Exhibition extends Model
         return $this->hasMany(Ticket::class);
     }
 
-    // Отношение многие-ко-многим с пользователями
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'exhibition_user')

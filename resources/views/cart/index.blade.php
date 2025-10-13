@@ -6,7 +6,6 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-12">
-            <!-- Заголовок -->
             <div class="d-flex justify-content-between align-items-center mb-5">
                 <h1 class="h2 fw-bold">Корзина</h1>
                 @if(count($tickets) > 0)
@@ -20,7 +19,6 @@
                 @endif
             </div>
 
-            <!-- Уведомление для неавторизованных пользователей -->
             @if(!auth()->check() && count($tickets) > 0)
                 <div class="alert alert-warning mb-4">
                     <div class="d-flex align-items-center">
@@ -35,7 +33,6 @@
 
             @if(count($tickets) > 0)
                 <div class="row">
-                    <!-- Список билетов -->
                     <div class="col-lg-8">
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-header bg-white border-0 py-4">
@@ -45,7 +42,6 @@
                                 @foreach($tickets as $ticket)
                                 <div class="border-bottom p-4">
                                     <div class="row align-items-center">
-                                        <!-- Информация о билете -->
                                         <div class="col-md-6">
                                             <div class="d-flex align-items-start">
                                                 @if($ticket->exhibition)
@@ -76,7 +72,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- Количество -->
                                         <div class="col-md-3">
                                             <div class="d-flex align-items-center">
                                                 <form action="{{ route('cart.update', $ticket) }}" method="POST" class="d-flex align-items-center">
@@ -98,7 +93,6 @@
                                             </small>
                                         </div>
 
-                                        <!-- Стоимость и удаление -->
                                         <div class="col-md-3 text-end">
                                             <div class="h6 fw-bold mb-2">
                                                 {{ number_format($ticket->subtotal, 0, ',', ' ') }} ₽
@@ -118,7 +112,6 @@
                         </div>
                     </div>
 
-                    <!-- Итоги и оформление -->
                     <div class="col-lg-4">
                         <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
                             <div class="card-header bg-white border-0 py-4">
@@ -129,11 +122,6 @@
                                     <span class="text-muted">Товары ({{ count($tickets) }}):</span>
                                     <span class="fw-medium">{{ number_format($total, 0, ',', ' ') }} ₽</span>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-muted">Комиссия:</span>
-                                    <span class="fw-medium">0 ₽</span>
-                                </div>
-                                <hr>
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <span class="fw-bold fs-5">Итого:</span>
                                     <span class="h4 mb-0 fw-bold text-dark">{{ number_format($total, 0, ',', ' ') }} ₽</span>
@@ -141,13 +129,8 @@
 
                                 <div class="d-grid">
                                     @if(auth()->check())
-                                        <!-- Кнопка для авторизованных пользователей -->
-                                        <a href="{{ route('checkout.show') }}" class="btn btn-dark btn-lg py-3 fw-medium">
-                                            <i class="fas fa-lock me-2"></i>
-                                            Перейти к оформлению
-                                        </a>
+                                        <a href="{{ route('checkout.show') }}" class="btn btn-dark btn-lg py-3 fw-medium">Перейти к оплате</a>
                                     @else
-                                        <!-- Кнопки для неавторизованных пользователей -->
                                         <div class="d-grid gap-2">
                                             <a href="{{ route('login') }}" class="btn btn-warning btn-lg py-3 fw-medium">
                                                 <i class="fas fa-sign-in-alt me-2"></i>
@@ -171,7 +154,6 @@
                     </div>
                 </div>
             @else
-                <!-- Пустая корзина -->
                 <div class="text-center py-5">
                     <div class="mb-4">
                         <i class="fas fa-shopping-cart display-1 text-muted"></i>
@@ -191,7 +173,6 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Обработка изменения количества
     document.querySelectorAll('.quantity-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const form = this.closest('form');

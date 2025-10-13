@@ -34,7 +34,6 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    // Отношение многие-ко-многим с выставками
     public function exhibitions()
     {
         return $this->belongsToMany(Exhibition::class, 'exhibition_user')

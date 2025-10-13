@@ -174,7 +174,6 @@
 
     @push('scripts')
     <script>
-        // Динамическое обновление placeholder для цены в зависимости от типа билета
         document.getElementById('type').addEventListener('change', function() {
             const priceInput = document.getElementById('price');
             const type = this.value;
@@ -194,7 +193,6 @@
             }
         });
 
-        // Валидация формы перед отправкой
         document.querySelector('form').addEventListener('submit', function(e) {
             const price = document.getElementById('price').value;
             const quantity = document.getElementById('available_quantity').value;

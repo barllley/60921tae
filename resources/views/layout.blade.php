@@ -10,7 +10,7 @@
 </head>
 <body>
 
-        <!-- блок отладки
+        <!--
     <div style="position: fixed; top: 10px; right: 10px; background: #333; color: white; padding: 10px; z-index: 9999; border-radius: 5px; font-size: 12px;">
         <strong>Отладка Auth:</strong><br>
         Auth::check(): {{ Auth::check() ? 'TRUE' : 'FALSE' }}<br>
@@ -21,6 +21,8 @@
             @csrf
         </form>
     </div> -->
+
+    @include('partials.navbar')
 
     @include('partials.messages')
 

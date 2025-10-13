@@ -42,12 +42,12 @@
             <div class="row mt-3">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <p class="mb-1"><strong><i class="fas fa-tag text-success"></i> Цена:</strong></p>
+                        <p class="mb-1"><strong>Цена:</strong></p>
                         <h4 class="text-success">{{ number_format($ticket->price, 0, ',', ' ') }} руб.</h4>
                     </div>
 
                     <div class="mb-3">
-                        <p class="mb-1"><strong><i class="fas fa-box-open text-primary"></i> Доступное количество:</strong></p>
+                        <p class="mb-1"><strong>Доступное количество:</strong></p>
                         @if($ticket->available_quantity > 0)
                             <span class="badge bg-success fs-6">{{ $ticket->available_quantity }} шт.</span>
                         @else
@@ -59,16 +59,15 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <p class="mb-1"><strong><i class="fas fa-calendar-alt text-info"></i> Дата создания:</strong></p>
-                        <p class="text-muted">{{ $ticket->created_at->format('d.m.Y H:i') }}</p>
+                        <p class="text-muted">{{ $ticket->created_at->format('d.m.Y') }}</p>
                     </div>
 
                     <div class="mb-3">
                         <p class="mb-1"><strong><i class="fas fa-sync-alt text-warning"></i> Последнее обновление:</strong></p>
-                        <p class="text-muted">{{ $ticket->updated_at->format('d.m.Y H:i') }}</p>
+                        <p class="text-muted">{{ $ticket->updated_at->format('d.m.Y') }}</p>
                     </div>
                 </div>
             </div>
-            <!-- Кнопка "В корзину" -->
             @if($ticket->available_quantity > 0)
                 <div class="row mt-4">
                     <div class="col-12">
@@ -101,6 +100,7 @@
             @if($ticket->exhibition)
                 <div class="card bg-light mt-3">
                     <div class="card-body">
+                        <p class="mb-1"><strong>Название:</strong></p>
                         <h6 class="card-title text-primary">{{ $ticket->exhibition->title }}</h6>
 
                         @if($ticket->exhibition->description)
@@ -115,12 +115,6 @@
                                 <p class="mb-2">
                                     <strong><i class="fas fa-calendar-day text-info"></i> Период проведения:</strong><br>
                                     {{ $ticket->exhibition->start_date->format('d.m.Y') }} - {{ $ticket->exhibition->end_date->format('d.m.Y') }}
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-clock text-warning"></i> Время работы:</strong><br>
-                                    {{ $ticket->exhibition->start_date->format('H:i') }} - {{ $ticket->exhibition->end_date->format('H:i') }}
                                 </p>
                             </div>
                         </div>
@@ -159,10 +153,8 @@
         @endif
     </div>
 
-    <!-- Скрипт для автоматического скрытия alert через 5 секунд -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Автоматическое скрытие alert через 5 секунд
             setTimeout(function() {
                 const alerts = document.querySelectorAll('.alert');
                 alerts.forEach(function(alert) {

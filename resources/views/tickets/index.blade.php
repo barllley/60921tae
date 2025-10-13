@@ -16,7 +16,6 @@
     </div>
 
 
-    <!-- выбор количества элементов на странице -->
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" action="{{ route('tickets.index') }}" class="row g-3 align-items-center">
@@ -195,7 +194,6 @@
         </a>
     </div>
 
-    <!-- cкрипт для автоматического скрытия -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 

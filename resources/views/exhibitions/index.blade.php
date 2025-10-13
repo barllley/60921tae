@@ -14,7 +14,6 @@
         @endif
     @endauth
 
-    <!-- Форма выбора количества элементов на странице -->
     <div class="card mb-4">
         <div class="card-body">
             <form method="GET" action="{{ route('exhibitions.index') }}" class="row g-3 align-items-center">
@@ -72,38 +71,32 @@
             @endforeach
         </div>
 
-        <!-- Элементы управления пагинацией -->
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <!-- Первая страница -->
                 <li class="page-item {{ $exhibitions->onFirstPage() ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $exhibitions->url(1) }}" aria-label="First">
                         <span aria-hidden="true">&laquo;&laquo;</span>
                     </a>
                 </li>
 
-                <!-- Предыдущая страница -->
                 <li class="page-item {{ $exhibitions->onFirstPage() ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $exhibitions->previousPageUrl() }}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
 
-                <!-- Номера страниц -->
                 @foreach ($exhibitions->getUrlRange(1, $exhibitions->lastPage()) as $page => $url)
                     <li class="page-item {{ $page == $exhibitions->currentPage() ? 'active' : '' }}">
                         <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                     </li>
                 @endforeach
 
-                <!-- Следующая страница -->
                 <li class="page-item {{ $exhibitions->hasMorePages() ? '' : 'disabled' }}">
                     <a class="page-link" href="{{ $exhibitions->nextPageUrl() }}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
 
-                <!-- Последняя страница -->
                 <li class="page-item {{ $exhibitions->currentPage() == $exhibitions->lastPage() ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $exhibitions->url($exhibitions->lastPage()) }}" aria-label="Last">
                         <span aria-hidden="true">&raquo;&raquo;</span>
@@ -112,7 +105,6 @@
             </ul>
         </nav>
 
-        <!-- Информация о пагинации -->
         <div class="text-center mt-3">
             <p class="text-muted">
                 Показано с {{ $exhibitions->firstItem() }} по {{ $exhibitions->lastItem() }} из {{ $exhibitions->total() }} записей

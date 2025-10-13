@@ -58,14 +58,6 @@
                                         {{ $exhibition->end_date->format('d.m.Y') }}
                                     </small>
                                 </div>
-
-                                <div class="exhibition-time mb-3">
-                                    <small class="text-muted">
-                                        <i class="fas fa-clock me-1"></i>
-                                        {{ $exhibition->start_date->format('H:i') }} -
-                                        {{ $exhibition->end_date->format('H:i') }}
-                                    </small>
-                                </div>
                             </div>
                             <div class="card-footer bg-transparent">
                                 <a href="{{ route('exhibitions.show', $exhibition->id) }}"

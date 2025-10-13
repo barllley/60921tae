@@ -7,7 +7,7 @@
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header bg-success text-white">
-                <h4 class="mb-0"><i class="fas fa-user-plus"></i> Регистрация</h4>
+                <h4 class="mb-0">Регистрация</h4>
             </div>
             <div class="card-body p-4">
                 <form method="POST" action="{{ route('register') }}">

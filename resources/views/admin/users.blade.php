@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Управление пользователями - SATURA')
+@section('title', 'Управление пользователями')
 
 @section('content')
     <div class="container mt-4">
@@ -9,9 +9,7 @@
                 <div class="card shadow-sm">
                     <div class="card-header bg-white border-bottom-0 py-3">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h4 class="mb-0 text-dark">
-                                <i class="fas fa-users me-2"></i>Пользователи
-                            </h4>
+                            <h4 class="mb-0 text-dark">Пользователи</h4>
                             <div class="d-flex align-items-center">
                                 <span class="badge bg-primary fs-6">Всего: {{ $users->total() }}</span>
                             </div>
@@ -74,7 +72,6 @@
                                 </table>
                             </div>
 
-                            <!-- Пагинация -->
                             @if($users->hasPages())
                             <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
                                 <div class="text-muted small">
@@ -82,7 +79,6 @@
                                 </div>
                                 <nav aria-label="Page navigation">
                                     <ul class="pagination mb-0">
-                                        <!-- Previous Page Link -->
                                         @if($users->onFirstPage())
                                             <li class="page-item disabled">
                                                 <span class="page-link">‹</span>
@@ -93,7 +89,6 @@
                                             </li>
                                         @endif
 
-                                        <!-- Pagination Elements -->
                                         @foreach($users->getUrlRange(1, $users->lastPage()) as $page => $url)
                                             @if($page == $users->currentPage())
                                                 <li class="page-item active">
@@ -106,7 +101,6 @@
                                             @endif
                                         @endforeach
 
-                                        <!-- Next Page Link -->
                                         @if($users->hasMorePages())
                                             <li class="page-item">
                                                 <a class="page-link" href="{{ $users->nextPageUrl() }}" rel="next">›</a>

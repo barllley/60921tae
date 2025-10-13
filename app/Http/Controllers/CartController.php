@@ -32,12 +32,10 @@ class CartController extends Controller
         $cart = Session::get('cart', []);
         $quantity = $request->input('quantity', 1);
 
-        // Проверяем доступность
         if ($ticket->available_quantity < $quantity) {
             return back()->with('error', 'Недостаточно билетов в наличии.');
         }
 
-        // Добавляем в корзину
         if (isset($cart[$ticket->id])) {
             $cart[$ticket->id]['quantity'] += $quantity;
         } else {
@@ -73,7 +71,6 @@ class CartController extends Controller
             return $this->remove($ticket);
         }
 
-        // Проверяем доступность
         if ($ticket->available_quantity < $quantity) {
             return back()->with('error', 'Недостаточно билетов в наличии.');
         }

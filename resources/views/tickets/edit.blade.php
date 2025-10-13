@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <!-- Флэш-сообщения -->
+    <!-- флэш-сообщения -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle"></i> {{ session('success') }}
@@ -58,7 +58,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="exhibition_id" class="form-label">
-                                        <i class="fas fa-palette"></i> Выставка *
+                                        <i class="fas fa-palette"></i> Выставка
                                     </label>
                                     <select class="form-select @error('exhibition_id') is-invalid @enderror"
                                             id="exhibition_id" name="exhibition_id" required>
@@ -82,7 +82,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="type" class="form-label">
-                                        <i class="fas fa-tag"></i> Тип билета *
+                                        <i class="fas fa-tag"></i> Тип билета
                                     </label>
                                     <select class="form-select @error('type') is-invalid @enderror"
                                             id="type" name="type" required>
@@ -120,7 +120,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="price" class="form-label">
-                                        <i class="fas fa-money-bill-wave"></i> Цена (руб.) *
+                                        <i class="fas fa-money-bill-wave"></i> Цена (руб.)
                                     </label>
                                     <div class="input-group">
                                         <input type="number" step="0.01"
@@ -142,7 +142,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="available_quantity" class="form-label">
-                                        <i class="fas fa-boxes"></i> Доступное количество *
+                                        <i class="fas fa-boxes"></i> Доступное количество
                                     </label>
                                     <input type="number"
                                            class="form-control @error('available_quantity') is-invalid @enderror"
@@ -170,9 +170,6 @@
                                         <i class="fas fa-times"></i> Отмена
                                     </a>
                                 </div>
-                                <div class="text-muted">
-                                    <small>ID: {{ $ticket->id }}</small>
-                                </div>
                             </div>
                         </div>
                     </form>
@@ -181,10 +178,10 @@
         </div>
 
         <div class="col-lg-4">
-            <!-- Блок информации о билете -->
+
             <div class="card">
                 <div class="card-header bg-light">
-                    <h6 class="mb-0"><i class="fas fa-info-circle"></i> Информация о билете</h6>
+                    <h6 class="mb-0">Информация о билете</h6>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -216,51 +213,9 @@
                             <span class="badge bg-danger fs-6">Нет в наличии</span>
                         @endif
                     </div>
-
-                    <hr>
-
-                    <div class="mb-2">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar-plus"></i> Создан:
-                            {{ $ticket->created_at->format('d.m.Y H:i') }}
-                        </small>
-                    </div>
-
-                    <div class="mb-2">
-                        <small class="text-muted">
-                            <i class="fas fa-calendar-check"></i> Обновлен:
-                            {{ $ticket->updated_at->format('d.m.Y H:i') }}
-                        </small>
-                    </div>
-
-                    <div>
-                        <small class="text-muted">
-                            <i class="fas fa-user-edit"></i> Редактирует:
-                            <strong>{{ Auth::user()->name }}</strong>
-                        </small>
-                    </div>
                 </div>
             </div>
 
-            <!-- Блок быстрых действий -->
-            <div class="card mt-3">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0"><i class="fas fa-bolt"></i> Быстрые действия</h6>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('tickets.show', $ticket->id) }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-eye"></i> Просмотр билета
-                        </a>
-                        <a href="{{ route('exhibitions.show', $ticket->exhibition_id) }}" class="btn btn-outline-info btn-sm">
-                            <i class="fas fa-external-link-alt"></i> Перейти к выставке
-                        </a>
-                        <a href="{{ route('tickets.index') }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-list"></i> Все билеты
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 @endsection
