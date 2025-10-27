@@ -25,7 +25,6 @@ class TicketController extends Controller
 
     public function create()
     {
-        // Проверяем Gate для создания билетов
         if (!Gate::allows('manage-tickets')) {
             return redirect()->route('tickets.index')
                 ->with('error', 'У вас нет прав для создания билетов. Только администратор может создавать билеты.');
@@ -37,7 +36,6 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-        // Проверяем Gate для создания билетов
         if (!Gate::allows('manage-tickets')) {
             return redirect()->route('tickets.index')
                 ->with('error', 'У вас нет прав для создания билетов. Только администратор может создавать билеты.');
@@ -76,7 +74,6 @@ class TicketController extends Controller
 
     public function edit($id)
     {
-        // Проверяем Gate для редактирования билетов
         if (!Gate::allows('manage-tickets')) {
             return redirect()->route('tickets.index')
                 ->with('error', 'У вас нет прав для редактирования билетов. Только администратор может редактировать билеты.');
@@ -95,7 +92,6 @@ class TicketController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Проверяем Gate для редактирования билетов
         if (!Gate::allows('manage-tickets')) {
             return redirect()->route('tickets.index')
                 ->with('error', 'У вас нет прав для редактирования билетов. Только администратор может редактировать билеты.');
@@ -136,7 +132,6 @@ class TicketController extends Controller
 
     public function destroy($id)
     {
-        // Проверяем Gate для удаления билетов
         if (!Gate::allows('manage-tickets')) {
             return redirect()->route('tickets.index')
                 ->with('error', 'У вас нет прав для удаления билетов. Только администратор может удалять билеты.');

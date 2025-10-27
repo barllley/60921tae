@@ -31,7 +31,7 @@
                                     <tbody>
                                         @foreach($users as $user)
                                         <tr class="border-top">
-                                            <td class="ps-3 fw-semibold text-muted">#{{ $user->id }}</td>
+                                            <td class="ps-3 fw-semibold text-muted">{{ $user->id }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">

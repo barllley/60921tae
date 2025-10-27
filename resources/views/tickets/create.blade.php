@@ -92,7 +92,7 @@
                                 <i class="fas fa-money-bill-wave"></i> Цена *
                             </label>
                             <div class="input-group">
-                                <input type="number" step="0.01"
+                                <input type="number" step="1"
                                        class="form-control @error('price') is-invalid @enderror"
                                        id="price" name="price"
                                        value="{{ old('price') }}"

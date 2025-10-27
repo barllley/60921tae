@@ -70,7 +70,7 @@ Route::middleware(['auth'])->group(function () {
     // Оформление заказа (только для авторизованных)
     Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
     Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
-
+    Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
     // Выход из системы
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 

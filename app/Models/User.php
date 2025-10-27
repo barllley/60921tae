@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Order;
-use App\Models\Exhibition;
-use App\Models\TicketInstance;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     protected $fillable = [
         'name',
@@ -22,10 +20,13 @@ class User extends Authenticatable
 
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     protected $casts = [
         'is_admin' => 'boolean',
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -37,7 +38,7 @@ class User extends Authenticatable
 
     public function exhibitions()
     {
-        return $this->belongsToMany(Exhibition::class, 'exhibition_user')
+        return $this->belongsToMany(Exhibition::class, 'exhibition_users')
                     ->withPivot('visited_at')
                     ->withTimestamps();
     }
@@ -47,43 +48,39 @@ class User extends Authenticatable
         return $this->hasManyThrough(
             TicketInstance::class,
             Order::class,
-            'user_id',             // Внешний ключ в промежуточной модели
-            'order_id',            // Внешний ключ в целевой модели
-            'id',                  // Локальный ключ
-            'id'                   // Локальный ключ в промежуточной модели
+            'user_id',      // Foreign key on orders table
+            'order_id',     // Foreign key on ticket_instances table
+            'id',           // Local key on users table
+            'id'            // Local key on orders table
         );
     }
-
-    public function purchasedTickets()
-    {
-        return $this->hasManyThrough(
-            Ticket::class,
-            TicketInstance::class,
-            'order_id', // Внешний ключ в TicketInstance
-            'id',       // Внешний ключ в Ticket
-            'id',       // Локальный ключ в User
-            'ticket_id' // Локальный ключ в TicketInstance
-        )->through('orders');
-    }
-
 
     public function tickets()
     {
         return $this->hasManyThrough(
             Ticket::class,
-            Order::class,
-            'user_id',  // Внешний ключ в Order
-            'id',       // Внешний ключ в Ticket
-            'id',       // Локальный ключ в User
-            'id'        // Локальный ключ в Order
-        )->via('ticketInstances');
+            TicketInstance::class,
+            'order_id',     // Foreign key on ticket_instances table
+            'id',           // Foreign key on tickets table
+            'id',           // Local key on users table
+            'ticket_id'     // Local key on ticket_instances table
+        )->through('ticketInstances');
     }
 
-    protected function casts(): array
+    public function cartItems()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->hasMany(CartItem::class);
+    }
+
+    public function cartTickets()
+    {
+        return $this->hasManyThrough(
+            Ticket::class,
+            CartItem::class,
+            'user_id',
+            'id',
+            'id',
+            'ticket_id'
+        );
     }
 }

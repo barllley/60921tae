@@ -8,13 +8,12 @@ use App\Models\TicketInstance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Gate;
 
 class CheckoutController extends Controller
 {
     public function show()
     {
-        if (!Gate::allows('access-checkout')) {
+        if (!Auth::check()) {
             return redirect('/login')->with('error', 'Для оформления заказа необходимо авторизоваться.');
         }
 
@@ -46,7 +45,7 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
-        if (!Gate::allows('access-checkout')) {
+        if (!Auth::check()) {
             return redirect('/login')->with('error', 'Для оформления заказа необходимо авторизоваться.');
         }
 
@@ -56,22 +55,10 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Корзина пуста.');
         }
 
-        $validated = $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email',
-            'customer_phone' => 'required|string|max:20',
-        ]);
-
         $order = Order::create([
             'user_id' => Auth::id(),
-            'total_amount' => 0,
             'status' => 'pending',
-            'customer_name' => $validated['customer_name'],
-            'customer_email' => $validated['customer_email'],
-            'customer_phone' => $validated['customer_phone'],
         ]);
-
-        $totalAmount = 0;
 
         foreach ($cart as $ticketId => $item) {
             $ticket = Ticket::find($ticketId);
@@ -81,18 +68,14 @@ class CheckoutController extends Controller
                     TicketInstance::create([
                         'ticket_id' => $ticket->id,
                         'order_id' => $order->id,
-                        'status' => 'active',
-                        'unique_code' => $this->generateUniqueCode(),
+                        'qr_code' => $this->generateQrCode(),
+                        'status' => 'valid',
                     ]);
                 }
 
                 $ticket->decrement('available_quantity', $item['quantity']);
-
-                $totalAmount += $ticket->price * $item['quantity'];
             }
         }
-
-        $order->update(['total_amount' => $totalAmount]);
 
         Session::forget('cart');
 
@@ -102,15 +85,17 @@ class CheckoutController extends Controller
 
     public function success(Order $order)
     {
-        if ($order->user_id !== Auth::id() && !Gate::allows('admin-access')) {
+        if ($order->user_id !== Auth::id()) {
             return redirect('/')->with('error', 'Доступ запрещен.');
         }
+
+        $order->load('ticketInstances.ticket.exhibition');
 
         return view('checkout.success', compact('order'));
     }
 
-    private function generateUniqueCode()
+    private function generateQrCode()
     {
-        return 'SAT-' . strtoupper(uniqid());
+        return 'TICKET-' . strtoupper(uniqid());
     }
 }

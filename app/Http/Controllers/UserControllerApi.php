@@ -12,7 +12,7 @@ class UserControllerApi extends Controller
      */
     public function index()
     {
-        // Возвращаем пользователей без чувствительных данных
+        // Возвращаем пользователей безданных
         $users = User::select('id', 'name', 'email', 'is_admin', 'created_at')
                     ->get();
 

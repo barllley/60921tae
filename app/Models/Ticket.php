@@ -25,4 +25,9 @@ class Ticket extends Model
     {
         return $this->belongsTo(Exhibition::class);
     }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }

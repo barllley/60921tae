@@ -46,8 +46,7 @@ class ExhibitionController extends Controller
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'start_date' => 'required|date',
-                'end_date' => 'required|date|after:start_date',
-                'location' => 'required|string|max:255',
+                'end_date' => 'required|date|after_or_equal:start_date',
             ]);
 
             Exhibition::create($validated);
@@ -93,7 +92,7 @@ class ExhibitionController extends Controller
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'start_date' => 'required|date',
-                'end_date' => 'required|date|after:start_date',
+                'end_date' => 'required|date|after_or_equal:start_date',
             ]);
 
             $exhibition->update($validated);

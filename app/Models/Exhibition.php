@@ -35,12 +35,4 @@ class Exhibition extends Model
                     ->withPivot('visited_at')
                     ->withTimestamps();
     }
-
-    protected function casts(): array
-    {
-        return [
-            'start_date' => 'datetime',
-            'end_date' => 'datetime',
-        ];
-    }
 }

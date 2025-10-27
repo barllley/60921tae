@@ -105,23 +105,6 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="location" class="form-label">
-                        <i class="fas fa-map-marker-alt"></i> Место проведения
-                    </label>
-                    <input type="text"
-                           class="form-control @error('location') is-invalid @enderror"
-                           id="location"
-                           name="location"
-                           value="{{ old('location') }}"
-                           required
-                           placeholder="Введите адрес или название места">
-                    @error('location')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                    <div class="form-text">Укажите, где будет проходить выставка</div>
-                </div>
-
                 <div class="mt-4 pt-3 border-top">
                     <button type="submit" class="btn btn-success btn-lg me-3">
                         <i class="fas fa-check"></i> Создать выставку
