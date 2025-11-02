@@ -55,6 +55,7 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Корзина пуста.');
         }
 
+        // СОЗДАЕМ ЗАКАЗ БЕЗ ЛИШНИХ ДАННЫХ
         $order = Order::create([
             'user_id' => Auth::id(),
             'status' => 'pending',

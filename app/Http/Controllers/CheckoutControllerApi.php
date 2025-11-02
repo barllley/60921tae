@@ -62,56 +62,71 @@ class CheckoutControllerApi extends Controller
     }
 
     public function process(Request $request)
-    {
-        if (!Auth::check()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Для оформления заказа необходимо авторизоваться.'
-            ], 401);
-        }
+{
+    if (!Auth::check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Для оформления заказа необходимо авторизоваться.'
+        ], 401);
+    }
 
-        $user = Auth::user();
-        $cartItems = CartItem::with('ticket')
-            ->where('user_id', $user->id)
-            ->get();
+    $user = Auth::user();
+    $cartItems = CartItem::with('ticket')
+        ->where('user_id', $user->id)
+        ->get();
 
-        if ($cartItems->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Корзина пуста.'
-            ], 400);
-        }
+    if ($cartItems->isEmpty()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Корзина пуста.'
+        ], 400);
+    }
 
-        $order = Order::create([
-            'user_id' => $user->id,
-            'status' => 'pending',
-        ]);
+    $order = Order::create([
+        'user_id' => $user->id,
+        'status' => 'pending',
+    ]);
 
-        $processedItems = [];
+    $processedItems = [];
 
-        foreach ($cartItems as $cartItem) {
-            $ticket = $cartItem->ticket;
+    foreach ($cartItems as $cartItem) {
+        $ticket = $cartItem->ticket;
 
-            if ($ticket && $ticket->available_quantity >= $cartItem->quantity) {
-                for ($i = 0; $i < $cartItem->quantity; $i++) {
-                    TicketInstance::create([
-                        'ticket_id' => $ticket->id,
-                        'order_id' => $order->id,
-                        'qr_code' => $this->generateQrCode(),
-                        'status' => 'valid',
-                    ]);
-                }
-
-                $ticket->decrement('available_quantity', $cartItem->quantity);
-
-                $processedItems[] = [
+        if ($ticket && $ticket->available_quantity >= $cartItem->quantity) {
+            for ($i = 0; $i < $cartItem->quantity; $i++) {
+                TicketInstance::create([
                     'ticket_id' => $ticket->id,
-                    'ticket_type' => $ticket->type,
-                    'quantity' => $cartItem->quantity,
-                    'subtotal' => $ticket->price * $cartItem->quantity
-                ];
+                    'order_id' => $order->id,
+                    'qr_code' => $this->generateQrCode(),
+                    'status' => 'valid',
+                ]);
             }
+
+            $ticket->decrement('available_quantity', $cartItem->quantity);
+
+            $processedItems[] = [
+                'ticket_id' => $ticket->id,
+                'ticket_type' => $ticket->type,
+                'quantity' => $cartItem->quantity,
+                'subtotal' => $ticket->price * $cartItem->quantity
+            ];
         }
+    }
+
+    CartItem::where('user_id', $user->id)->delete();
+
+    $order->load('ticketInstances.ticket');
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Заказ успешно оформлен!',
+        'data' => [
+            'order_id' => $order->id,
+            'order_status' => $order->status,
+            'processed_items' => $processedItems,
+            'ticket_instances' => $order->ticketInstances
+        ]
+    ]);
 
         CartItem::where('user_id', $user->id)->delete();
 
