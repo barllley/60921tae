@@ -12,11 +12,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']);
 
+// Exhibitions routes with pagination support
 Route::get('/exhibitions', [ExhibitionControllerApi::class, 'index']);
 Route::get('/exhibitions/{id}', [ExhibitionControllerApi::class, 'show']);
+Route::get('/exhibitions_total', [ExhibitionControllerApi::class, 'total']); // NEW
 
+// Tickets routes with pagination support
 Route::get('/tickets', [TicketControllerApi::class, 'index']);
 Route::get('/tickets/{id}', [TicketControllerApi::class, 'show']);
+Route::get('/tickets_total', [TicketControllerApi::class, 'total']); // NEW
 
 Route::get('/cart', [CartControllerApi::class, 'index']);
 Route::post('/cart/add/{ticketId}', [CartControllerApi::class, 'add']);

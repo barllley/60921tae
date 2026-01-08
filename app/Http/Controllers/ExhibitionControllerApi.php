@@ -8,11 +8,19 @@ use Illuminate\Http\Request;
 class ExhibitionControllerApi extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource with pagination
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Exhibition::with('tickets')->get());
+        $perpage = $request->perpage ?? 5;
+        $page = $request->page ?? 0;
+
+        $exhibitions = Exhibition::with('tickets')
+            ->limit($perpage)
+            ->offset($perpage * $page)
+            ->get();
+
+        return response()->json($exhibitions);
     }
 
     /**
@@ -21,5 +29,15 @@ class ExhibitionControllerApi extends Controller
     public function show(string $id)
     {
         return response()->json(Exhibition::with('tickets')->find($id));
+    }
+
+    /**
+     * Get total count of exhibitions
+     */
+    public function total()
+    {
+        return response()->json([
+            'total' => Exhibition::count()
+        ]);
     }
 }
