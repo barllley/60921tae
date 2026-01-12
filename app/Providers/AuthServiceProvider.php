@@ -4,12 +4,15 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Pagination\Paginator;
 
 class AuthServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
         $this->registerPolicies();
+
+        Paginator::defaultView('pagination::bootstrap-4');
 
         // Gate для проверки администратора
         Gate::define('admin-access', function ($user) {
@@ -39,6 +42,16 @@ class AuthServiceProvider extends ServiceProvider
         // Gate для редактирования своего профиля
         Gate::define('edit-profile', function ($user, $targetUser) {
             return $user && ($user->id === $targetUser->id || $user->is_admin == 1);
+        });
+
+        // Gate для создания элемента
+        Gate::define('create-exhibition', function ($user) {
+            return $user && $user->is_admin == 1;
+        });
+
+        // Gate для удаления элемента
+        Gate::define('destroy-item', function ($user, $item) {
+            return $user && ($user->is_admin == 1);
         });
     }
 }

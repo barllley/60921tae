@@ -14,6 +14,7 @@ class Exhibition extends Model
         'description',
         'start_date',
         'end_date',
+        'image_url',
     ];
 
      protected $casts = [
